@@ -4,12 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "weather-primary":"#06681A",
-        "weather-secondary":"004E71",
+        "weather-primary":"#00668A",
+        "weather-secondary":"#004E71",
       },
     },
     fontFamily: {
       Roboto: ["Roboto, sans-serif"],
+      Unica:["Unica One, sans-serif"],
     },
     container: {
       padding: "2rem",
