@@ -1,14 +1,14 @@
 <template>
     <header class="sticky top-0
-    bg-weather-primary shadow-lg"
+    bg-weather-primary"
     >
-        <nav class="container flex flex-col 
-        sm:flex-row items-center gap-4 text-black py-6"
+        <nav class="container flex 
+            flex-row items-center gap-4 text-black py-6"
         >
             <RouterLink :to="{name: 'home'}">
                 <div class="flex items-center gap-3 ">
-                    <i class="fa-solid fa-bolt text-2xl text-yellow-500"></i>
-                    <p class="text-bold text-2xl font-bold font-Unica">Zeus Weather</p>
+                    <i class="fa-solid fa-cloud-sun text-3xl text-yellow-500"></i>
+                    <p class="text-bold text-2xl font-bold font-Unica">Apollo</p>
                 </div>
             </RouterLink>
             
