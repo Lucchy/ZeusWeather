@@ -1,21 +1,28 @@
 <template>
-    <main class="container text-black font-Montserrat">
-        <div class="mt-20 mb-2">
-            <p class="text-6xl font-extralight text-gray-500 mb-3">Hello,</p>
-            <h2 class="text-4xl">Welcome on<span class="font-bold text-blue-400"> Apollo !</span></h2>
-            <p class="">Here you can preview the weather across the globe.</p>
+    <main class="container text-black font-Montserrat bg-slate-50">
+        <div class="flex flex-col mt-10 mb-10">
+            <p class="text-5xl font-extralight text-weather-secondary mb-5">Hello,</p>
+            <h2 class="text-4xl mb-3">Welcome on<span class="font-bold"> Apollo !</span></h2>
+            <p class="text-2xl mb-3 text-gray-700">The best weather app in the world ;D</p>
+            <div class="flex flex-row justify-around mt-10 text-3xl">
+                <i class="fa-solid fa-sun text-orange-300"></i>
+                <i class="fa-solid fa-cloud-showers-heavy text-blue-300"></i>
+                <i class="fa-solid fa-cloud-moon text-weather-secondary"></i>
+                <i class="fa-solid fa-umbrella text-weather-primary"></i>
+                <i class="fa-solid fa-cloud-bolt text-gray-300"></i>
+            </div>
         </div>
-        <div class="pt-4 mb-8 relative">
-            <p>Tell me, where do you want to know the weather ?</p>
+        <div class="text-xl pt-8 mb-8 relative">
+            <p></p>
             <input v-model="searchQuery" @input="getSearchResults"
                 type="text" 
                 placeholder="Search for a city or state"
-                class="py-2 px-1 w-full bg-transparent border-b
+                class="py-2 px-1 w-full bg-transparent border-blue-200 border-b-2
                 focus:border-blue-400 focus:outline-none"
             >
             <ul v-if="mapboxSearchResults && mapboxSearchResults.length > 0"
                 class="absolute bg-gray-200 text-black w-full
-                shadow-md py-2 px-1 top-[66px]"
+                shadow-md py-2 px-1 top-[86px]"
             >
                 <p v-if="searchError">
                     Sorry, something went wrong, please try again.
@@ -29,14 +36,15 @@
                 <template v-else>
                     <li @click="previewCity(searchResult)"
                     v-for="searchResult in mapboxSearchResults"
-                    :key=searchResult.id class="py-2 cursor-pointer"
+                    :key=searchResult.id
+                    class="py-2 cursor-pointer flex justify-between"
                     >
                         {{ searchResult.place_name }}
+                        <i class="fa-solid fa-arrow-right-to-bracket text-gray-400 mr-2"></i>
                     </li>
                 </template>
             </ul>
         </div>
-        
     </main>
 </template>
 

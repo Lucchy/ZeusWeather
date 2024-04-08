@@ -1,26 +1,25 @@
 <template>
-    <header class="sticky top-0
-    bg-weather-primary"
+    <header class="sticky top-0"
     >
         <nav class="container flex 
-            flex-row items-center gap-4 text-black py-6"
+            flex-row items-center text-black py-6"
         >
             <RouterLink :to="{name: 'home'}">
                 <div class="flex items-center gap-3 ">
-                    <i class="fa-solid fa-cloud-sun text-3xl text-yellow-500"></i>
+                    <i class="fa-solid fa-sun text-3xl text-yellow-400"></i>
                     <p class="text-bold text-2xl font-bold font-Unica">Apollo</p>
                 </div>
             </RouterLink>
             
-            <div class="flex gap-3 flex-1 justify-end text-blue-400">
+            <div class="flex gap-7 flex-1 justify-end text-weather-secondary">
                 <i @click="toggleModal"
                     class="fa-solid fa-circle-info text-xl 
-                    hover:text-weather-secondary duration-150 
+                    hover:text-yellow-400 duration-150 
                     cursor-pointer" 
                 ></i>
                 <i 
                     class="fa-solid fa-plus text-xl 
-                    hover:text-weather-secondary duration-150 
+                    hover:text-yellow-400 duration-150 
                     cursor-pointer"
                 ></i>
             </div>
