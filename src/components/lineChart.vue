@@ -1,29 +1,33 @@
 <template>
-    <div>
-
-    </div>
-</template>
-
-<script>
-import { Line } from 'vue-chartjs';
-
-export default {
-  extends: Line,
-  mounted() {
-    this.renderChart({
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label: 'Data One',
-          backgroundColor: '#f87979',
-          data: [40, 39, 10, 40, 39, 80, 40],
-        },
-      ],
-    });
+    <canvas ref="lineChartCanvas"></canvas>
+  </template>
+  
+  <script>
+  import Chart from 'chart.js';
+  
+  export default {
+  props: {
+    chartData: {
+      type: Object,
+      required: true
+    }
   },
+  mounted() {
+    this.renderChart();
+  },
+  methods: {
+    renderChart() {
+      const ctx = this.$refs.lineChartCanvas.getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: this.chartData,
+        options: {
+          responsive: false,
+          maintainAspectRatio: false
+        }
+      });
+    }
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-
-</style>
+  

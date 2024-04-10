@@ -1,6 +1,5 @@
 <template>
-    <header class="sticky top-0"
-    >
+    <header>
         <nav class="container flex 
             flex-row items-center text-black py-6"
         >

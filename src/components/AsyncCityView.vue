@@ -1,32 +1,42 @@
 <template>
     <div class="flex flex-col font-Montserrat">
         <!-- Banner -->
-        <div 
-            v-if="route.query.preview" 
-            class="bg-gray-200 text-gray-500 p-3 w-full text-center">
+        <div v-if="route.query.preview" 
+            class="bg-gray-300 text-gray-500 p-3 w-full text-center">
             <p>You are currently previewing this city, click the "+"
                 icon to start tracking this city.
             </p>
         </div>
         <!-- Weather Overview -->
-        <div class="container flex flex-col text-white py-12">
+        <div class="container flex flex-col text-white pt-12">
             <div class="flex flex-row rounded-lg items-center gap-20">
-                <div class="flex flex-col">
+                <div class="flex flex-col w-full">
                     <h1 class="text-4xl mb-2">{{ route.params.city }}</h1>
-                    <p class="text">
-                        {{ 
-                            new Date(weatherData.localTime).toLocaleDateString(
-                                "en-us",
-                                {
-                                    weekday:"short",
-                                    day:"2-digit",
-                                    month: "long",
-                                    hour:"numeric",
-                                    minute:"numeric"
-                                }
-                            )
-                        }}
-                    </p>
+                    <div class="justify-between flex">
+                        <p>
+                            {{
+                                new Date(weatherData.localTime).toLocaleDateString(
+                                    "en-us",
+                                    {
+                                        weekday:"short",
+                                        day:"2-digit",
+                                        month: "long",
+                                    }
+                                )
+                            }}
+                        </p>
+                        <p>
+                            {{
+                                new Date(weatherData.localTime).toLocaleTimeString(
+                                    "en-us",
+                                    {
+                                        hour:"numeric",
+                                        minute:"numeric",
+                                    }
+                                )
+                            }}
+                        </p>
+                    </div>
                 </div>
                 
             </div> 
@@ -55,8 +65,57 @@
                     alt="Weather Icon"
                 />
             </div>
-            
-            <p class="text-sm mb-12">
+        </div>
+
+        <!-- Hourly Weather -->
+        <div class="container mt-6 text-white w-full pb-14">
+            <div>
+                <h2 class="mb-4 flex flex-col items-center">Hourly Weather</h2>
+                <div class="flex h-54 w-full rounded-3xl overflow-x-scroll p-10 border-sky-200">
+                    <LineChart :chartData="chartData" class="w-screen"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- Others -->
+        <div class="container mt-10 text-white">
+            <div class="flex justify-around">
+                <div>
+                    <p>sunrise</p>
+                    <p>
+                        {{ 
+                            new Date(weatherData.sunriseTime).toLocaleTimeString(
+                            "en-us",
+                                {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                }
+                            )    
+                        }}
+                    </p>
+                </div>
+                <div>
+                    <p>sunset</p>
+                    <p>
+                        {{ 
+                    new Date(weatherData.sunsetTime).toLocaleTimeString(
+                        "en-us",
+                        {
+                            hour: "numeric",
+                            minute: "numeric",
+                        }
+                    ) 
+                }}
+                    </p>
+                </div>
+            </div>
+            <div class="flex justify-around">
+                <div>hum</div>
+                <div>press</div>
+                <div>wind</div>
+            </div>
+            <div class="mt-10 flex justify-center">PieChart</div>
+            <p class="text-sm mt-12 flex justify-center">
                 Last updated to
                 {{ 
                     new Date(weatherData.DataCalculationTime).toLocaleTimeString(
@@ -65,27 +124,46 @@
                             hour: "numeric",
                             minute: "numeric",
                         }
-                    ) }}
+                    ) 
+                }}
             </p>
-        </div>
-        <hr class="border-black border-opacity-10 border w-full" />
-
-        <!-- Hourly Weather -->
-        <div class="text-white max-w-screen-md w-full py-12">
-            <div class="mx-8">
-                <h2 class="mb-4">Hourly Weather</h2>
-                <div class="flex gap-10 overflow-x-scroll">
-                    <lineChart/>
-                </div>
-            </div>
         </div>
     </div>
 </template>
 
+
+
 <script setup>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import lineChart from './lineChart.vue';
+import LineChart from './lineChart.vue';
+
+
+// Simulate chart data
+const generateChartData = () => {
+  const labels = [];
+  const data = [];
+
+  for (let i = 0; i < 24; i++) {
+    const hour = i < 10 ? `0${i}:00` : `${i}:00`; // Format hours (0-23)
+    const temperature = Math.floor(Math.random() * 20) + 10; // Simulate temperature (10-30°C)
+    labels.push(hour);
+    data.push(temperature);
+  }
+
+  return {
+    labels: labels,
+    datasets: [{
+      label: 'Temperature (°C)',
+      data: data,
+      fill: false,
+      borderColor: '#ffffff',
+      tension: 0.1
+    }]
+  };
+};
+
+const chartData = generateChartData();
 
 // Fonction pour calculer l'heure locale à partir du timestamp et de l'offset
 const calculateLocalTime = (timestamp, userOffset, cityOffset) => {
@@ -116,17 +194,31 @@ const getWeatherData = async () => {
             userOffset,
             cityOffset
         );
-        //Appel de la fonction pour calculer l'heure d'actualisation des données météo locale
+        //Definition de la fonction pour calculer l'heure d'actualisation des données météo locale
         const DataCalculationTime = calculateLocalTime(
             weatherData.data.dt * 1000,
             userOffset,
             cityOffset
         );
 
+        //heure de sunrise et de sunset
+        const sunriseTime = calculateLocalTime(
+            weatherData.sys.sunrise * 1000,
+            userOffset,
+            cityOffset
+        )
+        const sunsetTime = calculateLocalTime(
+            weatherData.sys.sunset * 1000,
+            userOffset,
+            cityOffset
+        )
+
         return {
             ...weatherData.data,
             localTime: localTime,
-            DataCalculationTime : DataCalculationTime
+            DataCalculationTime : DataCalculationTime,
+            sunriseTime: sunriseTime,
+            sunsetTime: sunsetTime
         };
 
     } catch (err) {
@@ -145,7 +237,8 @@ const getWeatherForecast = async () => {
         console.log(err);
         throw err; 
     }
-}
+};
+
 const weatherData = await getWeatherData();
 console.log('weatherData = ', weatherData);
 const weatherForcast = getWeatherForecast();
