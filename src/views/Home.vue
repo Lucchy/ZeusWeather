@@ -1,15 +1,15 @@
 <template>
-    <main class="container text-black font-Montserrat bg-slate-50">
+    <main class="container text-black font-Montserrat">
         <div class="flex flex-col mt-10 mb-10">
             <p class="text-5xl font-extralight text-weather-secondary mb-5">Hello,</p>
             <h2 class="text-4xl mb-3">Welcome on<span class="font-bold"> Apollo !</span></h2>
             <p class="text-2xl mb-3 text-gray-700">Live weather updates, worldwide at a glance.</p>
             <div class="flex flex-row justify-around mt-10 text-3xl">
                 <i class="fa-solid fa-sun text-orange-300"></i>
-                <i class="fa-solid fa-cloud-showers-heavy text-blue-300"></i>
+                <i class="fa-solid fa-cloud-showers-heavy text-sky-300"></i>
                 <i class="fa-solid fa-cloud-moon text-weather-secondary"></i>
-                <i class="fa-solid fa-umbrella text-weather-primary"></i>
-                <i class="fa-solid fa-cloud-bolt text-gray-300"></i>
+                <i class="fa-solid fa-umbrella text-purple-300"></i>
+                <i class="fa-solid fa-cloud-bolt text-gray-400"></i>
             </div>
         </div>
         <div class="text-xl pt-8 mb-8 relative">

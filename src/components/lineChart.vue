@@ -22,8 +22,8 @@
         type: 'line',
         data: this.chartData,
         options: {
-          responsive: false,
-          maintainAspectRatio: false
+          responsive: true,
+          maintainAspectRatio: true
         }
       });
     }

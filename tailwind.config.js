@@ -14,6 +14,7 @@ module.exports = {
       Montserrat:["Montserrat, sans-serif"],
     },
     container: {
+      padding: "2rem",
       center: true,
     },
     screens: {

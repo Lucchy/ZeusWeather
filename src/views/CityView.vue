@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-weather-primary">
+    <div class="bg-sky-400">
         <Suspense>
             <AsyncCityView />
             <template #fallback>
