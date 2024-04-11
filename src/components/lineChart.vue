@@ -10,6 +10,10 @@
     chartData: {
       type: Object,
       required: true
+    },
+    dayName: {
+      type: String,
+      required: true
     }
   },
   mounted() {

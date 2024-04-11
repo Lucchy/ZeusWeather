@@ -73,7 +73,7 @@
         <div class="container pb-3 mt-5 w-full bg-[#69c7fd]">
             <div>
                 <h2 
-                class="m-4 flex flex-col items-center text-white font-semibold"
+                class="m-4 flex flex-col text-weather-secondary font-semibold"
                 >
                     Hourly Weather
                 </h2>
@@ -153,13 +153,25 @@
                     </div>
                 </div>
             </div>
-            <div class="container py-8 bg-[#69c7fd]"> 
-                <h2>This week</h2>
-                <p>Tomorrow</p>
-                <LineChart :chartData="weatherForcast.chartData[1]" />
-                <LineChart :chartData="weatherForcast.chartData[2]" />
-                <LineChart :chartData="weatherForcast.chartData[3]" />
-                <LineChart :chartData="weatherForcast.chartData[4]" />
+            <div class="container py-8 w-full px-0"> 
+                <h2 class="flex justify-center text-4xl mb-7 font-thin">5 days forecast</h2>
+                <div class="bg-[#69c7fd] mt-1 w-full p-5">
+                    <p class="text-weather-secondary font-bold">Tomorrow</p>
+                    <LineChart :chartData="weatherForcast.chartData[1]" />
+                </div>
+                <div class="bg-[#69c7fd] mt-1 w-full p-5">
+                    <p class="text-weather-secondary font-bold">{{ weatherForcast.chartData[2].dayName }}</p>
+                    <LineChart :chartData="weatherForcast.chartData[2]" />
+                </div>
+                <div class="bg-[#69c7fd] mt-1 p-5">
+                    <p class="text-weather-secondary font-bold">{{ weatherForcast.chartData[3].dayName }}</p>
+                    <LineChart :chartData="weatherForcast.chartData[3]" />
+                </div>
+                <div class="bg-[#69c7fd] mt-1 p-5">
+                    <p class="text-weather-secondary font-bold">{{ weatherForcast.chartData[4].dayName }}</p>
+                    <LineChart :chartData="weatherForcast.chartData[4]" />
+                </div>
+                
             </div>
 
             <p class="text-sm mt-12 flex justify-center">
@@ -247,7 +259,6 @@ const getWeatherData = async () => {
         console.log(err);
     }
 };
-
 const getWeatherForecast = async () => {
     try {
         const response = await axios.get(
@@ -282,24 +293,26 @@ const getWeatherForecast = async () => {
         for(let i = 0; i < days.length; i++) {
             const time = [];
             const temperatures = [];
+
             for(let j = 0; j < data.list.length; j++) {
                 const dt_txt = data.list[j].dt_txt;
                 const temperature = data.list[j].main.temp;
                 // Vérification si la date correspond au jour i
                 if (days[i].date === new Date(dt_txt).toLocaleDateString('en-US')) {
-                    time.push(new Date(dt_txt).getHours()); // Ajouter l'heure actuelle
-                    temperatures.push(temperature); // Ajouter la température correspondante
+                    time.push(new Date(dt_txt).getHours() + 'h'); // Ajouter l'heure actuelle
+                    temperatures.push(temperature); // Ajouter la température correspondant
                 }
             }
 
             chartData.push({
+                dayName: days[i].name,
                 labels: time, // Utiliser les heures pour les étiquettes
                 datasets: [{
-                    label: `Temperature (C°) - ${days[i].name}`,
+                    label: `Temperature °C`,
                     data: temperatures, // Utiliser les températures pour les données
                     fill: false,
                     borderColor: "#ffffff",
-                    tension: 0.2
+                    tension: 0.1
                 }]
             });
         }
@@ -323,5 +336,5 @@ console.log('weatherData = ', weatherData);
 
 const weatherForcast = await getWeatherForecast();
 console.log('weatherForcast : ', weatherForcast);
-
+console.log("truc", weatherForcast.chartData[2].datasets[0].label);
 </script>
