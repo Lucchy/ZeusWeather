@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "postcss": "^8.4.38",
