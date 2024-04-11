@@ -4,6 +4,7 @@
   
   <script>
   import {Chart} from 'chart.js';
+  Chart.register('line', Chart.controllers.line);
   
   export default {
   props: {
