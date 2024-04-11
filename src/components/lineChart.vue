@@ -3,9 +3,10 @@
   </template>
   
   <script>
-  import {Chart} from 'chart.js';
-  Chart.register('line', Chart.controllers.line);
-  
+import { Chart, registerables } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+
+Chart.register(...registerables);
   export default {
   props: {
     chartData: {
