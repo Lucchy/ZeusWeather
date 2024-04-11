@@ -79,7 +79,7 @@
                 </h2>
 
                 <div class="overflow-x-auto">
-                    <LineChart :chartData="chartData"/>
+                    <LineChart :chartData="weatherForcast.chartData[0]" />
                 </div>
             </div>
         </div>
@@ -89,12 +89,12 @@
 
             <div class="flex justify-around bg-[#69c7fd] pt-10 pb-7">
 
-                <div class="flex-col  flex-1">
-                    <div class="flex mb-6 w-full justify-center">
+                <div class="flex-col flex-1 pl-10">
+                    <div class="flex mb-6 w-full justify-center pb-4 border-b-2">
                         <i class="fa-solid fa-sun text-5xl text-yellow-200 mr-2"></i>
                         <i class="fa-solid fa-up-long text-weather-secondary"></i>
                     </div>
-                    <p class="flex justify-center text-2xl">
+                    <p class="flex justify-center text-xl">
                         {{ 
                             new Date(weatherData.sunriseTime).toLocaleTimeString(
                             "en-us",
@@ -106,13 +106,13 @@
                         }}
                     </p>
                 </div>
-                <div class="flex-col flex-1">
-                    <div class="flex mb-6 justify-center">
+                <div class="w-10"></div>
+                <div class="flex-col flex-1 pr-10">
+                    <div class="flex mb-6 justify-center pb-4 border-b-2">
                         <i class="fa-solid fa-sun text-5xl text-yellow-200 mr-2"></i>
                         <i class="fa-solid fa-down-long text-weather-secondary"></i>
                     </div>
-
-                    <p class="flex justify-center text-2xl">
+                    <p class="flex justify-center text-xl">
                         {{ 
                             new Date(weatherData.sunsetTime).toLocaleTimeString(
                                 "en-us",
@@ -131,7 +131,7 @@
                     <div class="flex-col">
                         <i class="fa-solid fa-droplet text-3xl text-sky-200 flex justify-center"></i>
                         <p class="my-3 flex justify-center">Humidity</p>
-                        <p class="flex justify-center">
+                        <p class="flex justify-center text-xl">
                             {{ weatherData.main.humidity}} %
                         </p>
                     </div>
@@ -139,7 +139,7 @@
                 <div class="flex-col">
                     <i class="fa-solid fa-globe text-3xl text-green-200 flex justify-center"></i>
                     <p class="my-3 flex justify-center">Pressure</p>
-                    <p class="flex justify-center">
+                    <p class="flex justify-center text-xl">
                         {{ weatherData.main.pressure}} hPa
                     </p>
                 </div>
@@ -147,13 +147,21 @@
                     <div>
                         <i class="fa-solid fa-wind text-3xl text-gray-200 flex justify-center"></i>
                         <p class="my-3 flex justify-center">Wind</p>
-                        <p class="flex justify-center">
-                            {{ weatherData.wind.speed * 3.6}} km/h
+                        <p class="flex justify-center text-xl">
+                            {{ Math.round(weatherData.wind.speed * 3.6)}} km/h
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="mt-10 flex justify-center">PieChart</div>
+            <div class="container py-8 bg-[#69c7fd]"> 
+                <h2>This week</h2>
+                <p>Tomorrow</p>
+                <LineChart :chartData="weatherForcast.chartData[1]" />
+                <LineChart :chartData="weatherForcast.chartData[2]" />
+                <LineChart :chartData="weatherForcast.chartData[3]" />
+                <LineChart :chartData="weatherForcast.chartData[4]" />
+            </div>
+
             <p class="text-sm mt-12 flex justify-center">
                 Last updated to
                 {{ 
@@ -166,6 +174,7 @@
                     ) 
                 }}
             </p>
+            
         </div>
     </div>
 </template>
@@ -177,32 +186,6 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import LineChart from './lineChart.vue';
 
-
-// Simulate chart data
-const generateChartData = () => {
-  const labels = [];
-  const data = [];
-
-  for (let i = 0; i < 24; i++) {
-    const hour = i < 10 ? `0${i}:00` : `${i}:00`; 
-    const temperature = Math.floor(Math.random() * 20); 
-    labels.push(hour);
-    data.push(temperature);
-  }
-
-  return {
-    labels: labels,
-    datasets: [{
-      label: 'Temperature (°C)',
-      data: data,
-      fill: false,
-      borderColor: '#ffffff',
-      tension: 0.6
-    }]
-  };
-};
-
-const chartData = generateChartData();
 
 // Fonction pour calculer l'heure locale à partir du timestamp et de l'offset
 const calculateLocalTime = (timestamp, userOffset, cityOffset) => {
@@ -252,8 +235,6 @@ const getWeatherData = async () => {
             userOffset,
             cityOffset
         ) 
-        console.log('datacal :', DataCalculationTime);
-        console.log('sunrise :', weatherData);
         return {
             ...weatherData.data,
             localTime: localTime,
@@ -271,19 +252,76 @@ const getWeatherForecast = async () => {
     try {
         const response = await axios.get(
             `https://api.openweathermap.org/data/2.5/forecast?lat=${route.query.lat}&lon=${route.query.lng}&appid=e770cd0f1c8fc4dfa15774be59321487&units=metric`
-        )
-        return response.data;
+        );
 
-    }catch(err) {
+        const data = response.data;
+        const days = [];
+        const getDayName = (dayIndex) => {
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return daysOfWeek[dayIndex];
+        };
+        const today = new Date();
+
+        days.push({
+            date: today.toLocaleDateString('en-US'),
+            name: getDayName(today.getDay())
+        });
+
+        for (let i = 1; i <= 4; i++) {
+            const nextDay = new Date();
+            nextDay.setDate(today.getDate() + i);
+            days.push({
+                date: nextDay.toLocaleDateString('en-US'),
+                name: getDayName(nextDay.getDay())
+            });
+        }
+
+        const chartData = [];
+
+        // Obtenir les heures et les températures pour chaque jour
+        for(let i = 0; i < days.length; i++) {
+            const time = [];
+            const temperatures = [];
+            for(let j = 0; j < data.list.length; j++) {
+                const dt_txt = data.list[j].dt_txt;
+                const temperature = data.list[j].main.temp;
+                // Vérification si la date correspond au jour i
+                if (days[i].date === new Date(dt_txt).toLocaleDateString('en-US')) {
+                    time.push(new Date(dt_txt).getHours()); // Ajouter l'heure actuelle
+                    temperatures.push(temperature); // Ajouter la température correspondante
+                }
+            }
+
+            chartData.push({
+                labels: time, // Utiliser les heures pour les étiquettes
+                datasets: [{
+                    label: `Temperature (C°) - ${days[i].name}`,
+                    data: temperatures, // Utiliser les températures pour les données
+                    fill: false,
+                    borderColor: "#ffffff",
+                    tension: 0.2
+                }]
+            });
+        }
+
+        console.log(chartData);
+        return {
+            chartData, // On renvoie un tableau avec les valeurs de température pour chaque jour
+            data,
+        };
+
+    } catch (err) {
         console.log(err);
-        throw err; 
+        throw err;
     }
 };
+
 
 
 const weatherData = await getWeatherData();
 console.log('weatherData = ', weatherData);
 
-const weatherForcast = getWeatherForecast();
+const weatherForcast = await getWeatherForecast();
 console.log('weatherForcast : ', weatherForcast);
+
 </script>

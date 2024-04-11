@@ -6,7 +6,7 @@
             <RouterLink :to="{name: 'home'}">
                 <div class="flex items-center gap-3 ">
                     <i class="fa-solid fa-sun text-3xl text-yellow-400"></i>
-                    <p class="text-bold text-2xl font-bold font-Unica">Apollo</p>
+                    <p class="text-bold text-2xl font-bold font-Montserrat">Apollo</p>
                 </div>
             </RouterLink>
             
