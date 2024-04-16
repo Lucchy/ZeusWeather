@@ -16,7 +16,7 @@
                     hover:text-yellow-400 duration-150 
                     cursor-pointer" 
                 ></i>
-                <i 
+                <i @click="addCity" v-if="route.query.preview"
                     class="fa-solid fa-plus text-xl 
                     hover:text-yellow-400 duration-150 
                     cursor-pointer"
@@ -42,8 +42,40 @@
 
 <script setup>
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { uid } from "uid";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import BaseModale from "./BaseModale.vue";
+
+const savedCities = ref([]);
+const route = useRoute();
+const router = useRouter();
+
+
+const addCity = ()=> {
+    if (localStorage.getItem("savedCities")) {
+        savedCities.value = JSON.parse(
+            localStorage.getItem('savedCities')
+        );
+    }
+
+    const locationObj = {
+        id: uid(),
+        state: route.params.state,
+        city: route.params.city,
+        coords: {
+            lat: route.query.lat,
+            lng: route.query.lng,
+        },
+    };
+
+savedCities.value.push(locationObj);
+localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
+
+let query = Object.assign({}, route.query);
+delete query.preview;
+router.replace({ query });
+
+};
 
    const modalActive = ref(null);
    const toggleModal = () => {

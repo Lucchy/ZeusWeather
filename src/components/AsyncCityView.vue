@@ -153,6 +153,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 5 day forecast -->
             <div class="container py-8 w-full px-0"> 
                 <h2 class="flex justify-center text-4xl mb-7 font-thin">5 days forecast</h2>
                 <div class="bg-[#69c7fd] mt-1 w-full p-5">
