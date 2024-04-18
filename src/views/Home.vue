@@ -45,9 +45,16 @@
                 </template>
             </ul>
         </div>
-        <div class="flex flex-col gap-4">
+
+        <div class="flex flex-col gap-4  pt-5">
+            <p class="text-xl font-semibold text-black">
+                Here's your saved Cities ;D
+            </p>
             <Suspense>
                 <CityList />
+                <template #fallback>
+                    <p>Loading...</p>
+                </template>
             </Suspense>
         </div>
     </main>
@@ -112,5 +119,6 @@ const getSearchResults = () => {
         mapboxSearchResults.value = true;
     },300);
 };
+
 </script>
 
